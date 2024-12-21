@@ -25,6 +25,8 @@
 #include <string.h>
 #include <stdio.h>
 #include "mbedtls/aes.h"
+#include"encrption_header.h"
+#include"AES_User_defines.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -34,7 +36,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define AES_BLOCK_SIZE 16
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -74,48 +76,16 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
 	  unsigned char plaintext[] = "This is a secret message!-omar says hi";
-	    unsigned char key[32] = "0123456789abcdef0123456789abcdef"; // 256-bit key
-	    unsigned char iv[AES_BLOCK_SIZE] = "0123456789abcdef";        // 128-bit IV
-	    unsigned char iv_copy[AES_BLOCK_SIZE];                        // To reuse for decryption
-
 	    // Buffers for ciphertext and decrypted text
 	    unsigned char ciphertext[128];
 	    unsigned char decrypted[128];
+	    unsigned char padded_plaintext[128];
 	    size_t plaintext_len = strlen((char *)plaintext);
 	    size_t padded_len = ((plaintext_len + AES_BLOCK_SIZE - 1) / AES_BLOCK_SIZE) * AES_BLOCK_SIZE; // Pad to block size
+	    padding_data_for_AES_encryption(plaintext,plaintext_len,padded_plaintext);
 
-	    // Padding the plaintext to match block size
-	    unsigned char padded_plaintext[128];
-	    memcpy(padded_plaintext, plaintext, plaintext_len);
-	    memset(padded_plaintext + plaintext_len, padded_len - plaintext_len, padded_len - plaintext_len); // PKCS7 padding
-	    mbedtls_aes_context aes;
-	    mbedtls_aes_init(&aes);
-
-	    // Encryption
-	    memcpy(iv_copy, iv, AES_BLOCK_SIZE); // Copy the IV as it will be modified during encryption
-	    if (mbedtls_aes_setkey_enc(&aes, key, 256) != 0) {
-	        printf("Failed to set AES encryption key\n");
-	        return 1;
-	    }
-
-	    if (mbedtls_aes_crypt_cbc(&aes, MBEDTLS_AES_ENCRYPT, padded_len, iv_copy, padded_plaintext, ciphertext) != 0) {
-	        printf("Encryption failed\n");
-	        return 1;
-	    }
-
-
-
-	    // Decryption
-	    memcpy(iv_copy, iv, AES_BLOCK_SIZE); // Reset IV for decryption
-	    if (mbedtls_aes_setkey_dec(&aes, key, 256) != 0) {
-	        printf("Failed to set AES decryption key\n");
-	        return 1;
-	    }
-
-	    if (mbedtls_aes_crypt_cbc(&aes, MBEDTLS_AES_DECRYPT, padded_len, iv_copy, ciphertext, decrypted) != 0) {
-	        printf("Decryption failed\n");
-	        return 1;
-	    }
+	    AES_Encryption(padded_len,padded_plaintext,ciphertext);
+	    AES_Decryption(padded_len,ciphertext,decrypted);
 
 	    // Remove padding
 	    size_t unpadded_len = padded_len - decrypted[padded_len - 1];
@@ -124,7 +94,7 @@ int main(void)
 	    printf("Decrypted text: %s\n", decrypted);
 
 	    // Clean up
-	    mbedtls_aes_free(&aes);
+
 	  /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
