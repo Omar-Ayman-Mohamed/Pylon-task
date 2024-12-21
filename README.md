@@ -10,9 +10,8 @@
 -The main encryption used here is AES-CBC and AES-GMC 
 ###
   AES-CBC :
-          encrypts and decrypts data using a key , key must be secured in a safe place
-   
-          suitable for legacy systems and low resorces systems , consider using it with hashing to ensure data intergrity
+          -encrypts and decrypts data using a key , key must be secured in a safe place
+          -suitable for legacy systems and low resorces systems , consider using it with hashing to ensure data intergrity
   ###
   functions :
   ``` C
@@ -22,3 +21,8 @@
 }
 ```
 Here the AES frame works with data of 16 byte blocks , so we must ensure that the data is padded before encryption 
+
+```C
+
+
+
