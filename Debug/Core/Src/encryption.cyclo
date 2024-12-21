@@ -1,6 +1,6 @@
 ../Core/Src/encryption.c:21:6:padding_data_for_AES_CBC_encryption	1
-../Core/Src/encryption.c:33:6:AES_Encryption	3
-../Core/Src/encryption.c:47:6:AES_Decryption	3
-../Core/Src/encryption.c:65:5:aes_gcm_encrypt	1
-../Core/Src/encryption.c:76:5:aes_gcm_decrypt	1
-../Core/Src/encryption.c:89:6:generate_random	1
+../Core/Src/encryption.c:36:6:AES_Encryption	3
+../Core/Src/encryption.c:62:6:AES_Decryption	3
+../Core/Src/encryption.c:92:5:aes_gcm_encrypt	1
+../Core/Src/encryption.c:117:5:aes_gcm_decrypt	1
+../Core/Src/encryption.c:140:6:generate_random	1
