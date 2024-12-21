@@ -9,7 +9,9 @@
           encrypts and decrypts data using a key , key must be secured in a safe place
           suitable for legacy systems and low resorces systems , consider using it with hashing to ensure data intergrity
   functions :
+  ``` C
   void padding_data_for_AES_CBC_encryption(unsigned char*original_text,size_t original_text_length,unsigned char * output){
     memcpy(output, original_text, original_text_length);
     memset(output + original_text_length, 0x00, 128 - original_text_length);  //padding
 }
+```
