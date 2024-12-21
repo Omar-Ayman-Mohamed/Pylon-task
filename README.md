@@ -97,5 +97,25 @@ int aes_gcm_decrypt(unsigned char *key,size_t KEY_SIZE,unsigned char *iv,size_t 
     return ret;
 }
 ````
-
+Decryption function 
+######
+# Random generator 
+for extra security , we can create random keys and iv's to ensure safety , but this comes at the cost that these data if encrypted and the mcu reset before decryption , another key will be generated causing this data to be lost , so it's best used for quick one session communications 
+```C
+void generate_random(unsigned char *buffer, size_t length,unsigned char*personalized_text,size_t personalized_text_len) {
+    mbedtls_entropy_context entropy;
+    mbedtls_ctr_drbg_context ctr_drbg;
+    /*intilization*/
+    mbedtls_entropy_init(&entropy);
+    mbedtls_ctr_drbg_init(&ctr_drbg);
+    /*seed generation*/
+    mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, personalized_text, personalized_text_len);
+   /*random data generation*/
+    mbedtls_ctr_drbg_random(&ctr_drbg, buffer, length);
+    /*freeing resources after finishing*/
+    mbedtls_ctr_drbg_free(&ctr_drbg);
+    mbedtls_entropy_free(&entropy);
+}
+```
+here we utilize the Mbed TLS library to genrate random data buffers that can be used for keys or iv's adding another layer of security for your application
 
