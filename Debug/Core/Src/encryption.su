@@ -1,3 +1,5 @@
-../Core/Src/encryption.c:13:6:padding_data_for_AES_encryption	24	static
-../Core/Src/encryption.c:18:6:AES_Encryption	312	static
-../Core/Src/encryption.c:32:6:AES_Decryption	312	static
+../Core/Src/encryption.c:19:6:padding_data_for_AES_encryption	24	static
+../Core/Src/encryption.c:31:6:AES_Encryption	312	static
+../Core/Src/encryption.c:45:6:AES_Decryption	312	static
+../Core/Src/encryption.c:63:5:aes_gcm_encrypt	464	static
+../Core/Src/encryption.c:74:5:aes_gcm_decrypt	456	static

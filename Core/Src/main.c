@@ -75,23 +75,16 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	  unsigned char plaintext[] = "This is a secret message!-omar says hi";
+	  unsigned char plaintext[] = "This is a secret message";
 	    // Buffers for ciphertext and decrypted text
 	    unsigned char ciphertext[128];
 	    unsigned char decrypted[128];
 	    unsigned char padded_plaintext[128];
+	    unsigned char Recieved_encrypted_data[128];
+	    unsigned char Tag[TAG_SIZE];
 	    size_t plaintext_len = strlen((char *)plaintext);
 	    size_t padded_len = ((plaintext_len + AES_BLOCK_SIZE - 1) / AES_BLOCK_SIZE) * AES_BLOCK_SIZE; // Pad to block size
 	    padding_data_for_AES_encryption(plaintext,plaintext_len,padded_plaintext);
-
-	    AES_Encryption(padded_len,padded_plaintext,ciphertext);
-	    AES_Decryption(padded_len,ciphertext,decrypted);
-
-	    // Remove padding
-	    size_t unpadded_len = padded_len - decrypted[padded_len - 1];
-	    decrypted[unpadded_len] = '\0'; // Null-terminate the decrypted string
-
-	    printf("Decrypted text: %s\n", decrypted);
 
 	    // Clean up
 
@@ -119,7 +112,44 @@ int main(void)
   MX_USART1_UART_Init();
   MX_MBEDTLS_Init();
   /* USER CODE BEGIN 2 */
+  aes_gcm_encrypt(plaintext,plaintext_len,ciphertext,Tag);
+  aes_gcm_decrypt(ciphertext,plaintext_len,decrypted,Tag);
+ /* padding_data_for_AES_encryption(plaintext,plaintext_len,padded_plaintext);
 
+  AES_Encryption(padded_len,padded_plaintext,ciphertext);
+  HAL_UART_Transmit(&huart1,ciphertext,padded_len,HAL_MAX_DELAY);
+  AES_Decryption(padded_len,ciphertext,decrypted); */
+
+  // Remove padding
+/*  int remove_pkcs7_padding(unsigned char *data, size_t *length) {
+      if (data == NULL || *length == 0) {
+          return -1; // Invalid input
+      }
+
+      // Get the value of the last byte (padding length)
+      unsigned char padding_length = data[*length - 1];
+
+      // Validate the padding length
+      if (padding_length == 0 || padding_length > *length) {
+          return -1; // Invalid padding
+      }
+
+      // Validate all padding bytes
+      for (size_t i = 0; i < padding_length; i++) {
+          if (data[*length - 1 - i] != padding_length) {
+              return -1; // Invalid padding
+          }
+      }
+
+      // Remove the padding by adjusting the length
+      *length -= padding_length;
+      return 0; // Success
+  }
+  remove_pkcs7_padding(decrypted,padded_len);
+ // size_t unpadded_len = padded_len - decrypted[padded_len - 1];
+ // decrypted[unpadded_len] = '\0'; // Null-terminate the decrypted string */
+
+  printf("Decrypted text: %s\n", decrypted);
   /* USER CODE END 2 */
 
   /* Infinite loop */
