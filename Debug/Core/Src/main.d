@@ -31,6 +31,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Middlewares/Third_Party/mbedTLS/include/mbedtls/check_config.h \
  ../Middlewares/Third_Party/mbedTLS/include/mbedtls/aes.h \
  ../MBEDTLS/App/mbedtls_config.h ../Core/Inc/encrption_header.h \
+ ../Core/Inc/AES_User_defines.h ../Core/Inc/key_stoarge.h \
  ../Core/Inc/AES_User_defines.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -67,4 +68,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Middlewares/Third_Party/mbedTLS/include/mbedtls/aes.h:
 ../MBEDTLS/App/mbedtls_config.h:
 ../Core/Inc/encrption_header.h:
+../Core/Inc/AES_User_defines.h:
+../Core/Inc/key_stoarge.h:
 ../Core/Inc/AES_User_defines.h:

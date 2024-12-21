@@ -27,6 +27,8 @@
 #include "mbedtls/aes.h"
 #include"encrption_header.h"
 #include"AES_User_defines.h"
+#include"key_stoarge.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -76,17 +78,20 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
 	  unsigned char plaintext[] = "This is a secret message";
-	    // Buffers for ciphertext and decrypted text
+	    /*Buffers for ciphertext and decrypted text */
 	    unsigned char ciphertext[128];
 	    unsigned char decrypted[128];
-	    unsigned char padded_plaintext[128];
+	    unsigned char padded_plaintext[128];/*padded buffer for use with AES-CBC encryption*/
 	    unsigned char Recieved_encrypted_data[128];
-	    unsigned char Tag[TAG_SIZE];
+	    unsigned char Tag[TAG_SIZE];/*tag for AES-GCM encryption*/
 	    size_t plaintext_len = strlen((char *)plaintext);
-	    size_t padded_len = ((plaintext_len + AES_BLOCK_SIZE - 1) / AES_BLOCK_SIZE) * AES_BLOCK_SIZE; // Pad to block size
-	    padding_data_for_AES_encryption(plaintext,plaintext_len,padded_plaintext);
 
-	    // Clean up
+	    /*for testing purposes*/
+	    unsigned char rand_key[16] = "0123456789123456";
+	    unsigned char rand_iv[16] = "aasd1245anmios78";
+	    generate_random(rand_key,16,pers,pers_len);
+	    generate_random(rand_iv,16,pers,pers_len);
+
 
 	  /* USER CODE END 1 */
 
@@ -112,13 +117,17 @@ int main(void)
   MX_USART1_UART_Init();
   MX_MBEDTLS_Init();
   /* USER CODE BEGIN 2 */
-  aes_gcm_encrypt(plaintext,plaintext_len,ciphertext,Tag);
-  aes_gcm_decrypt(ciphertext,plaintext_len,decrypted,Tag);
- /* padding_data_for_AES_encryption(plaintext,plaintext_len,padded_plaintext);
-
-  AES_Encryption(padded_len,padded_plaintext,ciphertext);
+ /* aes_gcm_encrypt(GCM_key,AES_GCM_KEY_SIZE,GCM_iv,AES_GCM_IV_SIZE,plaintext,plaintext_len,ciphertext,aad,aad_len,Tag);
   HAL_UART_Transmit(&huart1,ciphertext,padded_len,HAL_MAX_DELAY);
-  AES_Decryption(padded_len,ciphertext,decrypted); */
+  aes_gcm_decrypt(GCM_key,AES_GCM_KEY_SIZE,GCM_iv,AES_GCM_IV_SIZE,ciphertext,plaintext_len,decrypted,aad,aad_len,Tag);
+ */
+  size_t padded_len = ((plaintext_len + AES_BLOCK_SIZE - 1) / AES_BLOCK_SIZE) * AES_BLOCK_SIZE; // Pad to block size
+  padding_data_for_AES_CBC_encryption(plaintext,plaintext_len,padded_plaintext);
+  AES_Encryption(key,iv,padded_len,padded_plaintext,ciphertext);
+  HAL_UART_Transmit(&huart1,ciphertext,padded_len,HAL_MAX_DELAY);
+  AES_Decryption(key,iv,padded_len,ciphertext,decrypted);
+
+
 
   // Remove padding
 /*  int remove_pkcs7_padding(unsigned char *data, size_t *length) {
@@ -145,11 +154,11 @@ int main(void)
       *length -= padding_length;
       return 0; // Success
   }
-  remove_pkcs7_padding(decrypted,padded_len);
- // size_t unpadded_len = padded_len - decrypted[padded_len - 1];
- // decrypted[unpadded_len] = '\0'; // Null-terminate the decrypted string */
+  remove_pkcs7_padding(decrypted,padded_len); */
+ /* size_t unpadded_len = padded_len - decrypted[padded_len - 1];*/
+ /* decrypted[unpadded_len] = '\0'; // Null-terminate the decrypted string */
 
-  printf("Decrypted text: %s\n", decrypted);
+/*  printf("Decrypted text: %s\n", decrypted);*/
   /* USER CODE END 2 */
 
   /* Infinite loop */

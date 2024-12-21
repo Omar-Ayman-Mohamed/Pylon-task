@@ -14,4 +14,6 @@ const unsigned char aad[] = "header data";
 const unsigned char GCM_key[AES_GCM_KEY_SIZE] = "abcdefghilmnopq";
 const unsigned char GCM_iv[AES_GCM_IV_SIZE] = "123456789101";
 size_t aad_len = strlen((char *)aad);
+const unsigned char pers[] = "ahmed is -";
+size_t pers_len = strlen((char *)pers);
 #endif /* INC_KEY_STOARGE_H_ */
