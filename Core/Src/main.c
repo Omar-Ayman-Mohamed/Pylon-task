@@ -119,8 +119,10 @@ int main(void)
   /* USER CODE BEGIN 2 */
   aes_gcm_encrypt(GCM_key,AES_GCM_KEY_SIZE,GCM_iv,AES_GCM_IV_SIZE,plaintext,plaintext_len,ciphertext,aad,aad_len,Tag);
   HAL_UART_Transmit(&huart1,ciphertext,plaintext_len,HAL_MAX_DELAY);
+  /*uart here is for demonstration purpose , really any communication protcol will work*/
   aes_gcm_decrypt(GCM_key,AES_GCM_KEY_SIZE,GCM_iv,AES_GCM_IV_SIZE,ciphertext,plaintext_len,decrypted,aad,aad_len,Tag);
 
+  /*uncomment for AES-CBC encryption*/
  /* size_t padded_len = ((plaintext_len + AES_BLOCK_SIZE - 1) / AES_BLOCK_SIZE) * AES_BLOCK_SIZE; // Pad to block size
   padding_data_for_AES_CBC_encryption(plaintext,plaintext_len,padded_plaintext);
   AES_Encryption(key,iv,padded_len,padded_plaintext,ciphertext);
